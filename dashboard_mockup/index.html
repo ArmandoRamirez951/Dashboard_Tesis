@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aranea Telecom | Sistema BI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- MODALES OVERLAY -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        
+        <!-- MODAL FORMULARIO: NUEVA / EDITAR ORDEN -->
+        <div id="modal-order" class="modal-card" style="display: none;">
+            <div class="modal-header">
+                <h3 id="modal-order-title">Nueva Orden de Trabajo</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Cliente / Empresa</label>
+                    <input type="text" class="search-input" style="width: 100%" placeholder="Nombre del cliente">
+                </div>
+                <div class="input-group">
+                    <label>Dirección del Servicio</label>
+                    <input type="text" class="search-input" style="width: 100%" placeholder="Calle, Número, Colonia">
+                </div>
+                <div class="input-group">
+                    <label>Prioridad</label>
+                    <select class="filter-select" style="width: 100%">
+                        <option>Alta</option>
+                        <option>Media</option>
+                        <option>Baja</option>
+                    </select>
+                </div>
+                <button class="login-btn action-modal-btn">Guardar Orden</button>
+            </div>
+        </div>
+        
+        <!-- MODAL ASIGNAR TÉCNICO -->
+        <div id="modal-assign" class="modal-card" style="display: none;">
+            <div class="modal-header">
+                <h3>Asignar Técnico</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Selecciona a un técnico disponible para enviarle los detalles de la orden a su app móvil.</p>
+                <div class="input-group">
+                    <label>Técnico a asignar</label>
+                    <select class="filter-select" style="width: 100%">
+                        <option>Luis Torres (Disponible)</option>
+                        <option>A. Ruiz (Disponible)</option>
+                        <option>Juan Pérez (En Ruta - Ocupado)</option>
+                    </select>
+                </div>
+                <button class="login-btn action-modal-btn">Confirmar Asignación</button>
+            </div>
+        </div>
+
+        <!-- MODAL DETALLE ORDEN -->
+        <div id="modal-detail" class="modal-card" style="display: none;">
+            <div class="modal-header">
+                <h3>Detalle del Servicio</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <p style="margin-bottom:0.5rem;"><strong>Cliente:</strong> Corp. Alpha</p>
+                    <p style="margin-bottom:0.5rem;"><strong>Técnico:</strong> J. Pérez</p>
+                    <p style="margin-bottom:0.5rem;"><strong>Estado:</strong> <span class="badge badge-info">En Proceso</span></p>
+                    <p style="margin-bottom:0.5rem;"><strong>Dirección:</strong> Av. Principal 102, Edificio B.</p>
+                    <hr style="border-color: rgba(255,255,255,0.05); margin: 1rem 0;">
+                    <p style="color:var(--text-muted); font-size:0.85rem;"><strong>Reporte del Técnico:</strong> "Problema de intermitencia detectado en el panel principal. Procediendo a reemplazar conector de fibra."</p>
+                </div>
+                <button class="login-btn action-modal-btn" style="background:var(--sidebar-bg); border:1px solid var(--border-color); color:white;">Cerrar Vista</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fa-solid fa-network-wired"></i>
+                <h2>Aranea Telecom</h2>
+                <p>Portal Operativo</p>
+            </div>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Usuario</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="username" placeholder="Ingresa admin" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Ingresa 1234" required>
+                    </div>
+                </div>
+                <button type="submit" class="login-btn">Iniciar Sesión</button>
+                <div id="login-error" class="error-msg" style="display:none;">Usuario o contraseña incorrectos.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PRINCIPAL -->
+    <div id="dashboard-screen" class="dashboard-container" style="display: none;">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>Aranea Telecom</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="view-dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-orders">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span>Órdenes de Trabajo</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-technicians">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Técnicos</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-reports">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Reportes</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-settings">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn" class="nav-item logout-item">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-wrapper">
+            <header class="top-header">
+                <div class="header-title">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="header-controls">
+                    <select class="filter-select">
+                        <option>Últimos 7 días</option>
+                        <option>Este Mes</option>
+                        <option>Mes Anterior</option>
+                    </select>
+                    <div class="profile">
+                        <div class="avatar">A</div>
+                        <div class="profile-info">
+                            <span class="profile-name">Administrador</span>
+                            <span class="profile-role">Gerencia</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-area">
+                
+                <!-- VISTA 1: DASHBOARD -->
+                <div id="view-dashboard" class="view-section" style="display: block;">
+                    
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Tasa Cumplim. SLA</span>
+                                <i class="fa-solid fa-stopwatch kpi-icon text-success"></i>
+                            </div>
+                            <div class="kpi-value">92%</div>
+                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +2% vs mes ant.</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Tiempo Promedio</span>
+                                <i class="fa-solid fa-clock-rotate-left kpi-icon text-primary"></i>
+                            </div>
+                            <div class="kpi-value">2h 15m</div>
+                            <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -10m vs mes ant.</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>% con Incidencias</span>
+                                <i class="fa-solid fa-triangle-exclamation kpi-icon text-warning"></i>
+                            </div>
+                            <div class="kpi-value">18%</div>
+                            <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +5% vs mes ant.</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Órdenes Abiertas</span>
+                                <i class="fa-solid fa-clipboard-list kpi-icon text-slate"></i>
+                            </div>
+                            <div class="kpi-value">14</div>
+                            <div class="kpi-trend text-muted"><span>Actualizado ahora</span></div>
+                        </div>
+                        
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Satisfacción Cliente</span>
+                                <i class="fa-solid fa-star kpi-icon text-warning"></i>
+                            </div>
+                            <div class="kpi-value">4.8<span style="font-size:1rem; color:var(--text-muted)">/5</span></div>
+                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.2 pts</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Servicios Cancelados</span>
+                                <i class="fa-solid fa-ban kpi-icon text-danger"></i>
+                            </div>
+                            <div class="kpi-value">3</div>
+                            <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -2 vs mes ant.</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Tickets Reabiertos</span>
+                                <i class="fa-solid fa-rotate-left kpi-icon text-warning"></i>
+                            </div>
+                            <div class="kpi-value">5%</div>
+                            <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +1% vs mes ant.</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <span>Eficiencia Operativa</span>
+                                <i class="fa-solid fa-bolt kpi-icon text-success"></i>
+                            </div>
+                            <div class="kpi-value">95%</div>
+                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +3% vs mes ant.</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card" style="margin-top: 1.5rem;">
+                        <div class="chart-title">Volumen de Solicitudes Mensual</div>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráficas Añadidas Recientes -->
+                    <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
+                        <div class="chart-card">
+                            <div class="chart-title">Cumplimiento SLA por Región</div>
+                            <div class="chart-container"><canvas id="radarChart"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">Motivos de Cancelación</div>
+                            <div class="chart-container"><canvas id="horizontalBarChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid" style="margin-top: 1.5rem;">
+                        <div class="chart-card">
+                            <div class="chart-title">Productividad por Técnico</div>
+                            <div class="chart-container"><canvas id="barChart"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">Incidencias Activas</div>
+                            <div class="chart-container"><canvas id="donutChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="table-card" style="margin-top: 1.5rem;">
+                        <div class="table-header-flex">
+                            <div class="chart-title" style="margin-bottom:0;">Operaciones en Tiempo Real</div>
+                            <div><input type="text" class="search-input" placeholder="Buscar ID o Cliente..."></div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Técnico</th>
+                                    <th>Estado Actual</th>
+                                    <th>Última Act.</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>#101</td><td>Corp. Alpha</td><td>J. Pérez</td><td><span class="badge badge-info">En Proceso</span></td><td>Hace 15 min</td><td><button class="action-btn">Detalle</button></td></tr>
+                                <tr><td>#102</td><td>Beta Networks</td><td>M. Gómez</td><td><span class="badge badge-danger">Detenida</span></td><td>Hace 45 min</td><td><button class="action-btn">Detalle</button></td></tr>
+                                <tr><td>#103</td><td>Gamma S.A.</td><td>L. Torres</td><td><span class="badge badge-warning">En Camino</span></td><td>Hace 5 min</td><td><button class="action-btn">Detalle</button></td></tr>
+                                <tr><td>#104</td><td>Omega Corp</td><td>A. Ruiz</td><td><span class="badge badge-success">Finalizada</span></td><td>Hace 2 horas</td><td><button class="action-btn">Detalle</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VISTA 2: ÓRDENES DE TRABAJO -->
+                <div id="view-orders" class="view-section" style="display: none;">
+                    <div class="table-card">
+                        <div class="table-header-flex">
+                            <div class="chart-title" style="margin-bottom:0;">Todas las Órdenes</div>
+                            <div>
+                                <button class="action-btn primary-btn" style="margin-right: 1rem;"><i class="fa-solid fa-plus"></i> Nueva Orden</button>
+                                <input type="text" class="search-input" placeholder="Buscar orden...">
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Dirección</th>
+                                    <th>Técnico Asignado</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>#205</td><td>Logistics MX</td><td>Av. Central 123</td><td>J. Pérez</td><td><span class="badge badge-danger">Alta</span></td><td><span class="badge badge-info">En Proceso</span></td><td><button class="action-btn">Editar</button></td></tr>
+                                <tr><td>#206</td><td>Consultores Y</td><td>Torre Norte, Piso 4</td><td>M. Gómez</td><td><span class="badge badge-warning">Media</span></td><td><span class="badge badge-warning">Pendiente</span></td><td><button class="action-btn">Editar</button></td></tr>
+                                <tr><td>#207</td><td>Global Market</td><td>Plaza Sur, L-12</td><td>L. Torres</td><td><span class="badge badge-success">Baja</span></td><td><span class="badge badge-success">Finalizada</span></td><td><button class="action-btn">Editar</button></td></tr>
+                                <tr><td>#208</td><td>Industrias W</td><td>Parque Ind. Bodega 2</td><td>A. Ruiz</td><td><span class="badge badge-danger">Alta</span></td><td><span class="badge badge-danger">Detenida</span></td><td><button class="action-btn">Editar</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VISTA 3: TÉCNICOS -->
+                <div id="view-technicians" class="view-section" style="display: none;">
+                    <div class="kpi-grid">
+                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                            <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem;">JP</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">Juan Pérez</h3>
+                            <span class="badge badge-info" style="margin-bottom: 1rem;">En Ruta</span>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Especialidad: Fibra Óptica</p>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top:0.5rem;">Órdenes hoy: 4</p>
+                            <button class="action-btn" style="margin-top: 1rem; width: 100%;">Asignar Orden</button>
+                        </div>
+                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                            <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #6366f1, #3b82f6);">MG</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">María Gómez</h3>
+                            <span class="badge badge-danger" style="margin-bottom: 1rem;">Detenida</span>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Especialidad: Redes Inalámbricas</p>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top:0.5rem;">Órdenes hoy: 2</p>
+                            <button class="action-btn" style="margin-top: 1rem; width: 100%;">Asignar Orden</button>
+                        </div>
+                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                            <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #f59e0b, #ef4444);">LT</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">Luis Torres</h3>
+                            <span class="badge badge-success" style="margin-bottom: 1rem;">Disponible</span>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Especialidad: Cableado Estructurado</p>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top:0.5rem;">Órdenes hoy: 5</p>
+                            <button class="action-btn" style="margin-top: 1rem; width: 100%;">Asignar Orden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISTA 4: REPORTES -->
+                <div id="view-reports" class="view-section" style="display: none;">
+                    <div class="kpi-card" style="max-width: 600px;">
+                        <div class="chart-title">Generador de Reportes</div>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecciona los parámetros para exportar un reporte detallado en Excel o PDF.</p>
+                        
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="flex: 1;">
+                                <label style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.85rem;">Rango de Fechas</label>
+                                <input type="date" class="search-input" style="width: 100%; margin-bottom: 0.5rem;">
+                                <input type="date" class="search-input" style="width: 100%;">
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.85rem;">Tipo de Reporte</label>
+                                <select class="filter-select" style="width: 100%;">
+                                    <option>Rendimiento por Técnico</option>
+                                    <option>Listado de Incidencias</option>
+                                    <option>Cumplimiento SLA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="action-btn primary-btn"><i class="fa-solid fa-download"></i> Descargar Excel</button>
+                        <button class="action-btn" style="margin-left: 0.5rem;"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
+                    </div>
+                </div>
+
+                <!-- VISTA 5: CONFIGURACIÓN -->
+                <div id="view-settings" class="view-section" style="display: none;">
+                    <div class="kpi-card" style="max-width: 600px;">
+                        <div class="chart-title">Preferencias del Sistema</div>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Opciones globales de la plataforma Aranea Telecom.</p>
+                        <hr style="border-color: rgba(255,255,255,0.05); margin-bottom: 1rem;">
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                            <span>Recibir notificaciones semanales (Gerencia)</span>
+                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                            <span>Alertas SMS automáticas para Técnicos</span>
+                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                            <span>Requerir foto de evidencia al finalizar orden</span>
+                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                        </div>
+                        
+                        <button class="action-btn primary-btn" style="margin-top: 1rem;">Guardar Cambios</button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
