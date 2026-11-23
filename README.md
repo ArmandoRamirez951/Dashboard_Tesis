@@ -25,22 +25,29 @@ Este proyecto fue conceptualizado para solucionar la fragmentación de la inform
 ## 📂 Estructura de Archivos
 ```text
 /
-├── arquitectura_aranea_telecom.md  # Definición de modelo de datos SQL y cálculos de KPIs
-└── dashboard_mockup/               # Prototipo visual funcional
-    ├── index.html                  # Estructura principal y Modales
-    ├── styles.css                  # Hoja de estilos premium
-    └── script.js                   # Lógica de navegación y renderizado de gráficos
+├── tesis.py                             # Servidor local en Python para iniciar el dashboard
+├── arquitectura_aranea_telecom.md       # Definición de modelo de datos SQL y cálculos de KPIs
+├── reporte_resultados_aranea_telecom.md # Reporte técnico general con sección 4.3 de KPIs
+├── capitulos_v_vi_resultados.md         # Capítulos V (Resultados Parciales) y VI (Resultados Finales) de tesis
+├── capitulo_vii_conclusiones.md         # Capítulo VII (7.1 Conclusiones Generales) de tesis
+└── dashboard_mockup/                    # Prototipo visual funcional
+    ├── index.html                       # Estructura principal y Modales
+    ├── styles.css                       # Hoja de estilos premium (tema claro)
+    └── script.js                        # Lógica de navegación y renderizado de gráficos
 ```
 
 ## 💻 Instrucciones de Uso Local
-Dado que el proyecto utiliza tecnologías web estándar del lado del cliente, **no requiere** la instalación de un servidor o dependencias adicionales (NPM/Node).
+El proyecto incluye un lanzador ligero en Python estándar (sin dependencias externas).
 
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/tu-usuario/Sistema_Tesis_Aranea.git
    ```
-2. Navega a la carpeta `/dashboard_mockup/`.
-3. Abre el archivo `index.html` directamente en tu navegador web favorito (Google Chrome, Microsoft Edge, etc.).
+2. En la carpeta raíz del proyecto, inicia el servidor ejecutando:
+   ```bash
+   python tesis.py
+   ```
+3. Se abrirá automáticamente tu navegador en `http://127.0.0.1:8080`.
 4. **Credenciales de prueba:**
    * **Usuario:** `admin`
    * **Contraseña:** `1234`

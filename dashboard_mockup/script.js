@@ -1,4 +1,4 @@
-Chart.defaults.color = '#94a3b8';
+Chart.defaults.color = '#475569';
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.font.size = 13;
 
@@ -182,8 +182,8 @@ function renderCharts() {
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false } } },
-            plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(11, 25, 44, 0.9)', padding: 10, cornerRadius: 8 } }
+            scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(15, 23, 42, 0.06)', drawBorder: false } } },
+            plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.92)', padding: 10, cornerRadius: 8 } }
         }
     });
 
@@ -196,15 +196,15 @@ function renderCharts() {
             datasets: [{
                 label: 'Cumplimiento SLA %',
                 data: [95, 88, 92, 85, 98],
-                backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                borderColor: '#10b981',
-                pointBackgroundColor: '#10b981'
+                backgroundColor: 'rgba(5, 150, 105, 0.18)',
+                borderColor: '#059669',
+                pointBackgroundColor: '#059669'
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: { r: { angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#94a3b8', font: {size: 12} }, ticks: { display: false } } },
-            plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(11, 25, 44, 0.9)' } }
+            scales: { r: { angleLines: { color: 'rgba(15, 23, 42, 0.1)' }, grid: { color: 'rgba(15, 23, 42, 0.1)' }, pointLabels: { color: '#475569', font: {size: 12} }, ticks: { display: false } } },
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.92)' } }
         }
     });
 
@@ -224,8 +224,8 @@ function renderCharts() {
         options: {
             indexAxis: 'y',
             responsive: true, maintainAspectRatio: false,
-            scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' } }, y: { grid: { display: false } } },
-            plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(11, 25, 44, 0.9)', padding: 10 } }
+            scales: { x: { grid: { color: 'rgba(15, 23, 42, 0.06)' } }, y: { grid: { display: false } } },
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.92)', padding: 10 } }
         }
     });
 
@@ -237,13 +237,13 @@ function renderCharts() {
             labels: ['J. Pérez', 'M. Gómez', 'L. Torres', 'R. Sánchez', 'A. Ruiz'],
             datasets: [
                 { label: 'Completadas', data: [7, 4, 8, 5, 6], backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.6 },
-                { label: 'En Proceso', data: [2, 5, 1, 3, 2], backgroundColor: '#38bdf8', borderRadius: 4, barPercentage: 0.6 }
+                { label: 'En Proceso', data: [2, 5, 1, 3, 2], backgroundColor: '#0ea5e9', borderRadius: 4, barPercentage: 0.6 }
             ]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false }, border: { display: false } } },
-            plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(11, 25, 44, 0.9)', padding: 10, cornerRadius: 8 } }
+            scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: 'rgba(15, 23, 42, 0.06)', drawBorder: false }, border: { display: false } } },
+            plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.92)', padding: 10, cornerRadius: 8 } }
         }
     });
 
@@ -255,13 +255,13 @@ function renderCharts() {
             labels: ['Bloqueo Ductos', 'Cliente Ausente', 'Falta Material', 'Otros'],
             datasets: [{
                 data: [45, 30, 15, 10],
-                backgroundColor: ['#ef4444', '#f59e0b', '#38bdf8', '#64748b'],
+                backgroundColor: ['#ef4444', '#f59e0b', '#0ea5e9', '#64748b'],
                 borderWidth: 0, hoverOffset: 6
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false, cutout: '75%',
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(11, 25, 44, 0.9)', padding: 10, cornerRadius: 8 } }
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20, usePointStyle: true, pointStyle: 'circle' } }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.92)', padding: 10, cornerRadius: 8 } }
         }
     });
 }
