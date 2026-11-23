@@ -25,15 +25,13 @@ Este proyecto fue conceptualizado para solucionar la fragmentación de la inform
 ## 📂 Estructura de Archivos
 ```text
 /
+├── index.html                           # Punto de entrada y redirección para GitHub Pages
 ├── tesis.py                             # Servidor local en Python para iniciar el dashboard
-├── arquitectura_aranea_telecom.md       # Definición de modelo de datos SQL y cálculos de KPIs
-├── reporte_resultados_aranea_telecom.md # Reporte técnico general con sección 4.3 de KPIs
-├── capitulos_v_vi_resultados.md         # Capítulos V (Resultados Parciales) y VI (Resultados Finales) de tesis
-├── capitulo_vii_conclusiones.md         # Capítulo VII (7.1 Conclusiones Generales) de tesis
-└── dashboard_mockup/                    # Prototipo visual funcional
-    ├── index.html                       # Estructura principal y Modales
-    ├── styles.css                       # Hoja de estilos premium (tema claro)
-    └── script.js                        # Lógica de navegación y renderizado de gráficos
+├── .nojekyll                            # Configuración de despliegue estático en GitHub Pages
+└── dashboard_mockup/                    # Prototipo visual funcional (SPA)
+    ├── index.html                       # Estructura principal, KPIs, vistas y modales
+    ├── styles.css                       # Hoja de estilos (tema claro corporativo)
+    └── script.js                        # Datos estáticos, diccionario de KPIs, filtros y gráficos
 ```
 
 ## 💻 Instrucciones de Uso Local
