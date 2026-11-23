@@ -9,7 +9,7 @@ from pathlib import Path
 
 PORT = 8080
 BASE_DIR = Path(__file__).resolve().parent
-WEB_DIR = BASE_DIR / "dashboard_mockup"
+WEB_DIR = BASE_DIR
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):

@@ -25,13 +25,12 @@ Este proyecto fue conceptualizado para solucionar la fragmentación de la inform
 ## 📂 Estructura de Archivos
 ```text
 /
-├── index.html                           # Punto de entrada y redirección para GitHub Pages
-├── tesis.py                             # Servidor local en Python para iniciar el dashboard
-├── .nojekyll                            # Configuración de despliegue estático en GitHub Pages
-└── dashboard_mockup/                    # Prototipo visual funcional (SPA)
-    ├── index.html                       # Estructura principal, KPIs, vistas y modales
-    ├── styles.css                       # Hoja de estilos (tema claro corporativo)
-    └── script.js                        # Datos estáticos, diccionario de KPIs, filtros y gráficos
+├── index.html   # Estructura principal del Dashboard SPA, KPIs, vistas y modales
+├── styles.css   # Hoja de estilos (tema claro corporativo)
+├── script.js    # Datos estáticos, diccionario de KPIs, filtros y gráficos (Chart.js)
+├── tesis.py     # Servidor local en Python para iniciar el dashboard (python tesis.py)
+├── .nojekyll    # Configuración de despliegue estático en GitHub Pages
+└── .gitignore   # Exclusión de archivos temporales y caché
 ```
 
 ## 💻 Instrucciones de Uso Local
