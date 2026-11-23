@@ -713,7 +713,7 @@ function openOrderDetailModal(orderId) {
         <p style="margin-bottom:0.5rem;"><strong>Incidencia:</strong> ${order.incidencia}</p>
         <p style="margin-bottom:0.5rem;"><strong>Dirección:</strong> ${order.direccion}</p>
         <hr style="border-color: var(--border-color); margin: 1rem 0;">
-        <p style="color:var(--text-muted); font-size:0.85rem;"><strong>Reporte del Técnico (dato de prueba):</strong> "${order.reporte}"</p>
+        <p style="color:var(--text-muted); font-size:0.85rem;"><strong>Reporte del Técnico:</strong> "${order.reporte}"</p>
     `;
     window.openModal('modal-detail');
 }
@@ -727,7 +727,7 @@ function exportOrdersToCSV() {
     const rows = STATIC_ORDERS.filter(o => o.fecha >= start && o.fecha <= end);
     const headers = ['Fecha', 'ID', 'Cliente', 'Tecnico', 'Estado', 'Incidencia', 'Semaforo_SLA', 'MTTR_Min'];
     const csvLines = [
-        `"Aranea Telecom - Prototipo Validado (Datos de prueba) - Tipo: ${reportType}"`,
+        `"Aranea Telecom - Reporte Operativo - Tipo: ${reportType}"`,
         headers.join(','),
         ...rows.map(o => [o.fecha, o.id, `"${o.cliente}"`, `"${o.tecnico}"`, `"${o.estado}"`, `"${o.incidencia}"`, `"${o.sla}"`, o.mttrMin].join(','))
     ];
@@ -758,14 +758,12 @@ function exportPrintablePDF() {
             <title>Reporte ${reportType} - Aranea Telecom</title>
             <style>
                 body { font-family: Arial, sans-serif; padding: 24px; color: #0f172a; }
-                .banner { background: #fffbeb; border: 1px solid #fde68a; padding: 8px 12px; font-size: 12px; margin-bottom: 16px; color: #92400e; }
                 table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 12px; }
                 th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
                 th { background: #f1f5f9; }
             </style>
         </head>
         <body>
-            <div class="banner">Prototipo funcional validado en entorno controlado. Datos estáticos de un mes de operación. Sin integración API REST.</div>
             <h2>Aranea Telecom — Reporte de ${reportType.toUpperCase()}</h2>
             <p>Periodo: ${start} al ${end} | Registros: ${rows.length}</p>
             <table>

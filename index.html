@@ -24,9 +24,6 @@
                 <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <div style="margin-bottom: 1rem;">
-                    <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba (sin backend)</span>
-                </div>
                 <div class="input-group">
                     <label>Cliente / Empresa</label>
                     <input type="text" class="search-input" style="width: 100%" placeholder="Nombre del cliente">
@@ -178,17 +175,6 @@
         <!-- CONTENIDO PRINCIPAL -->
         <div class="main-wrapper">
 
-            <!-- 1. BANNER DE ALCANCE (Visible en todas las vistas) -->
-            <div class="scope-banner" role="status" aria-label="Alcance del prototipo">
-                <div class="scope-banner-content">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Prototipo funcional validado en entorno controlado. Datos estáticos de un mes de operación. Sin integración API REST.</span>
-                </div>
-                <span class="scope-tooltip-trigger" data-tooltip="Este prototipo SPA procesa un conjunto de datos estáticos simulados de 1 mes (4 semanas, corte al 31/10/2026) directamente en el navegador. No representa cifras institucionales reales ni cuenta con conexión a un backend productivo.">
-                    <i class="fa-solid fa-circle-question"></i> Alcance
-                </span>
-            </div>
-
             <header class="top-header">
                 <div class="header-title">
                     <h2>Dashboard</h2>
@@ -236,16 +222,13 @@
                 <!-- VISTA 1: DASHBOARD -->
                 <div id="view-dashboard" class="view-section" style="display: block;">
                     
-                    <!-- 2 & 3. KPI CARDS SUPERIORES (8 KPIs requeridos + Datos de prueba + Ficha técnica + Drill-down) -->
+                    <!-- KPI CARDS SUPERIORES (8 KPIs + Ficha técnica + Drill-down) -->
                     <div class="kpi-grid">
                         <!-- KPI 1: Órdenes abiertas -->
                         <div class="kpi-card" data-drill="abiertas" title="Clic para filtrar órdenes abiertas en la tabla">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-clipboard-list kpi-icon text-slate"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Órdenes Abiertas</span>
+                                <i class="fa-solid fa-clipboard-list kpi-icon text-slate"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-abiertas">14</div>
                             <div class="kpi-footer">
@@ -256,12 +239,9 @@
 
                         <!-- KPI 2: Tasa de cumplimiento SLA -->
                         <div class="kpi-card" data-drill="sla-riesgo" title="Clic para filtrar órdenes en riesgo o vencidas de SLA">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-stopwatch kpi-icon text-success"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Tasa Cumplim. SLA</span>
+                                <i class="fa-solid fa-stopwatch kpi-icon text-success"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-sla">92%</div>
                             <div class="kpi-footer">
@@ -277,12 +257,9 @@
 
                         <!-- KPI 3: MTTR -->
                         <div class="kpi-card" data-drill="finalizadas" title="Clic para ver órdenes finalizadas en la tabla">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-clock-rotate-left kpi-icon text-primary"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>MTTR (Tiempo Resolución)</span>
+                                <i class="fa-solid fa-clock-rotate-left kpi-icon text-primary"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-mttr">2h 15m</div>
                             <div class="kpi-footer">
@@ -293,12 +270,9 @@
 
                         <!-- KPI 4: Incidencias por tipo -->
                         <div class="kpi-card" data-drill="incidencias" title="Clic para filtrar órdenes con incidencia">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-triangle-exclamation kpi-icon text-warning"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Incidencias Registradas</span>
+                                <i class="fa-solid fa-triangle-exclamation kpi-icon text-warning"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-incidencias">18%</div>
                             <div class="kpi-footer">
@@ -309,12 +283,9 @@
 
                         <!-- KPI 5: Carga de trabajo por técnico -->
                         <div class="kpi-card" data-drill="todas" title="Clic para ver distribución completa en tabla">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-users-gear kpi-icon text-primary"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Carga por Técnico</span>
+                                <i class="fa-solid fa-users-gear kpi-icon text-primary"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-carga">8.6 <span style="font-size:1rem; color:var(--text-muted)">ord/téc</span></div>
                             <div class="kpi-footer">
@@ -325,12 +296,9 @@
 
                         <!-- KPI 6: Órdenes cerradas (productividad) -->
                         <div class="kpi-card" data-drill="finalizadas" title="Clic para filtrar órdenes cerradas">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-circle-check kpi-icon text-success"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Órdenes Cerradas</span>
+                                <i class="fa-solid fa-circle-check kpi-icon text-success"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-cerradas">178</div>
                             <div class="kpi-footer">
@@ -341,12 +309,9 @@
 
                         <!-- KPI 7: Tiempo medio de respuesta a incidencias -->
                         <div class="kpi-card" data-drill="incidencias" title="Clic para filtrar órdenes con incidencia">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-bolt kpi-icon text-warning"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Resp. a Incidencias</span>
+                                <i class="fa-solid fa-bolt kpi-icon text-warning"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-resp-inc">38 min</div>
                             <div class="kpi-footer">
@@ -357,12 +322,9 @@
 
                         <!-- KPI 8: Tasa de retrabajo -->
                         <div class="kpi-card" data-drill="retrabajo" title="Clic para filtrar tickets reabiertos">
-                            <div class="kpi-meta-row">
-                                <span class="badge-test-data">Datos de prueba</span>
-                                <i class="fa-solid fa-rotate-left kpi-icon text-danger"></i>
-                            </div>
                             <div class="kpi-header">
                                 <span>Tasa de Retrabajo</span>
+                                <i class="fa-solid fa-rotate-left kpi-icon text-danger"></i>
                             </div>
                             <div class="kpi-value" id="kpi-val-retrabajo">5%</div>
                             <div class="kpi-footer">
@@ -404,10 +366,7 @@
                     <!-- 4. RADAR SLA POR REGIÓN + SEMÁFOROS SLA + MOTIVOS DE CANCELACIÓN -->
                     <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
                         <div class="chart-card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                                <div class="chart-title" style="margin-bottom:0;">Cumplimiento SLA por Región</div>
-                                <span class="badge-test-data">Datos de prueba</span>
-                            </div>
+                            <div class="chart-title">Cumplimiento SLA por Región</div>
                             <div class="chart-container" style="height:240px;"><canvas id="radarChart"></canvas></div>
                             <div class="sla-legend">
                                 <span class="sla-legend-item"><span class="sla-dot sla-green"></span> Verde (≥90%): Centro 98%, Norte 95%, Este 92%</span>
@@ -416,10 +375,7 @@
                             </div>
                         </div>
                         <div class="chart-card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                                <div class="chart-title" style="margin-bottom:0;">Motivos de Cancelación</div>
-                                <span class="badge-test-data">Datos de prueba</span>
-                            </div>
+                            <div class="chart-title">Motivos de Cancelación</div>
                             <div class="chart-container"><canvas id="horizontalBarChart"></canvas></div>
                         </div>
                     </div>
@@ -488,14 +444,11 @@
                     </div>
                 </div>
 
-                <!-- VISTA 2: ÓRDENES DE TRABAJO (Mantenida y etiquetada) -->
+                <!-- VISTA 2: ÓRDENES DE TRABAJO -->
                 <div id="view-orders" class="view-section" style="display: none;">
                     <div class="table-card">
                         <div class="table-header-flex" style="flex-wrap: wrap; gap: 1rem;">
-                            <div style="display:flex; align-items:center; gap:0.75rem;">
-                                <div class="chart-title" style="margin-bottom:0;">Todas las Órdenes</div>
-                                <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
-                            </div>
+                            <div class="chart-title" style="margin-bottom:0;">Todas las Órdenes</div>
                             <div>
                                 <button class="action-btn primary-btn" style="margin-right: 1rem;"><i class="fa-solid fa-plus"></i> Nueva Orden</button>
                                 <input type="text" id="orders-search-input" class="search-input" placeholder="Buscar orden...">
@@ -523,11 +476,10 @@
                     </div>
                 </div>
 
-                <!-- VISTA 3: TÉCNICOS (Mantenida y etiquetada con estado simulado) -->
+                <!-- VISTA 3: TÉCNICOS -->
                 <div id="view-technicians" class="view-section" style="display: none;">
                     <div class="module-notice">
                         <span><i class="fa-solid fa-location-crosshairs"></i> <strong>Nota de disponibilidad:</strong> Estado simulado, no GPS real.</span>
-                        <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
                     </div>
                     <div class="kpi-grid">
                         <div class="kpi-card" style="align-items: center; text-align: center; cursor: default;">
@@ -557,13 +509,10 @@
                     </div>
                 </div>
 
-                <!-- VISTA 4: REPORTES (Mantenida y funcional en cliente) -->
+                <!-- VISTA 4: REPORTES -->
                 <div id="view-reports" class="view-section" style="display: none;">
                     <div class="kpi-card" style="max-width: 650px; cursor: default;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                            <div class="chart-title" style="margin-bottom:0;">Generador de Reportes</div>
-                            <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
-                        </div>
+                        <div class="chart-title" style="margin-bottom:0;">Generador de Reportes</div>
                         <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Selecciona los parámetros para exportar un reporte detallado en Excel (CSV) o PDF.</p>
                         
                         <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
