@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aranea Telecom | Sistema BI</title>
+    <title>Aranea Telecom | Sistema BI (Prototipo)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,6 +23,9 @@
                 <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
+                <div style="margin-bottom: 1rem;">
+                    <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba (sin backend)</span>
+                </div>
                 <div class="input-group">
                     <label>Cliente / Empresa</label>
                     <input type="text" class="search-input" style="width: 100%" placeholder="Nombre del cliente">
@@ -50,7 +53,7 @@
                 <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <p style="color:var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Selecciona a un técnico disponible para enviarle los detalles de la orden a su app móvil.</p>
+                <p style="color:var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Selecciona a un técnico disponible (estado simulado, sin conexión a app móvil ni GPS real).</p>
                 <div class="input-group">
                     <label>Técnico a asignar</label>
                     <select class="filter-select" style="width: 100%">
@@ -70,7 +73,7 @@
                 <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                <div id="modal-detail-content" style="background: #f8fafc; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
                     <p style="margin-bottom:0.5rem;"><strong>Cliente:</strong> Corp. Alpha</p>
                     <p style="margin-bottom:0.5rem;"><strong>Técnico:</strong> J. Pérez</p>
                     <p style="margin-bottom:0.5rem;"><strong>Estado:</strong> <span class="badge badge-info">En Proceso</span></p>
@@ -81,6 +84,24 @@
                 <button class="login-btn action-modal-btn" style="background: #f1f5f9; border: 1px solid var(--border-color); color: var(--text-main);">Cerrar Vista</button>
             </div>
         </div>
+
+        <!-- MODAL FICHA TÉCNICA INDIVIDUAL DE KPI -->
+        <div id="modal-kpi-spec" class="modal-card modal-lg" style="display: none;">
+            <div class="modal-header">
+                <h3 id="kpi-spec-title">Ficha Técnica del Indicador</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="kpi-spec-body"></div>
+        </div>
+
+        <!-- MODAL DICCIONARIO COMPLETO DE INDICADORES -->
+        <div id="modal-dictionary" class="modal-card modal-lg" style="display: none;">
+            <div class="modal-header">
+                <h3>Diccionario de Indicadores (8 KPIs)</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="dictionary-body"></div>
+        </div>
     </div>
 
     <!-- PANTALLA DE LOGIN -->
@@ -89,7 +110,7 @@
             <div class="login-logo">
                 <i class="fa-solid fa-network-wired"></i>
                 <h2>Aranea Telecom</h2>
-                <p>Portal Operativo</p>
+                <p>Portal Operativo (Prototipo BI)</p>
             </div>
             <form id="login-form">
                 <div class="input-group">
@@ -155,16 +176,50 @@
 
         <!-- CONTENIDO PRINCIPAL -->
         <div class="main-wrapper">
+
+            <!-- 1. BANNER DE ALCANCE (Visible en todas las vistas) -->
+            <div class="scope-banner" role="status" aria-label="Alcance del prototipo">
+                <div class="scope-banner-content">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Prototipo funcional validado en entorno controlado. Datos estáticos de un mes de operación. Sin integración API REST.</span>
+                </div>
+                <span class="scope-tooltip-trigger" data-tooltip="Este prototipo SPA procesa un conjunto de datos estáticos simulados de 1 mes (4 semanas, corte al 31/10/2026) directamente en el navegador. No representa cifras institucionales reales ni cuenta con conexión a un backend productivo.">
+                    <i class="fa-solid fa-circle-question"></i> Alcance
+                </span>
+            </div>
+
             <header class="top-header">
                 <div class="header-title">
                     <h2>Dashboard</h2>
                 </div>
                 <div class="header-controls">
-                    <select class="filter-select">
-                        <option>Últimos 7 días</option>
-                        <option>Este Mes</option>
-                        <option>Mes Anterior</option>
+                    <!-- 5. FILTROS GLOBALES -->
+                    <select id="filter-period" class="filter-select" aria-label="Filtrar por periodo">
+                        <option value="mes">Este Mes (4 semanas)</option>
+                        <option value="sem4">Últimos 7 días (Sem 4)</option>
+                        <option value="sem1">Semana 1</option>
+                        <option value="sem2">Semana 2</option>
+                        <option value="sem3">Semana 3</option>
                     </select>
+                    <select id="filter-technician" class="filter-select" aria-label="Filtrar por técnico">
+                        <option value="todos">Todos los técnicos</option>
+                        <option value="J. Pérez">J. Pérez</option>
+                        <option value="M. Gómez">M. Gómez</option>
+                        <option value="L. Torres">L. Torres</option>
+                        <option value="R. Sánchez">R. Sánchez</option>
+                        <option value="A. Ruiz">A. Ruiz</option>
+                    </select>
+                    <select id="filter-status" class="filter-select" aria-label="Filtrar por estado">
+                        <option value="todos">Todos los estados</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Detenida">Detenida</option>
+                        <option value="En Camino">En Camino</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Finalizada">Finalizada</option>
+                    </select>
+                    <button id="btn-reset-filters" class="action-btn" style="display: none;" title="Limpiar todos los filtros">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Limpiar
+                    </button>
                     <div class="profile">
                         <div class="avatar">A</div>
                         <div class="profile-info">
@@ -180,141 +235,272 @@
                 <!-- VISTA 1: DASHBOARD -->
                 <div id="view-dashboard" class="view-section" style="display: block;">
                     
+                    <!-- 2 & 3. KPI CARDS SUPERIORES (8 KPIs requeridos + Datos de prueba + Ficha técnica + Drill-down) -->
                     <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Tasa Cumplim. SLA</span>
-                                <i class="fa-solid fa-stopwatch kpi-icon text-success"></i>
-                            </div>
-                            <div class="kpi-value">92%</div>
-                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +2% vs mes ant.</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Tiempo Promedio</span>
-                                <i class="fa-solid fa-clock-rotate-left kpi-icon text-primary"></i>
-                            </div>
-                            <div class="kpi-value">2h 15m</div>
-                            <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -10m vs mes ant.</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>% con Incidencias</span>
-                                <i class="fa-solid fa-triangle-exclamation kpi-icon text-warning"></i>
-                            </div>
-                            <div class="kpi-value">18%</div>
-                            <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +5% vs mes ant.</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Órdenes Abiertas</span>
+                        <!-- KPI 1: Órdenes abiertas -->
+                        <div class="kpi-card" data-drill="abiertas" title="Clic para filtrar órdenes abiertas en la tabla">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
                                 <i class="fa-solid fa-clipboard-list kpi-icon text-slate"></i>
                             </div>
-                            <div class="kpi-value">14</div>
-                            <div class="kpi-trend text-muted"><span>Actualizado ahora</span></div>
-                        </div>
-                        
-                        <div class="kpi-card">
                             <div class="kpi-header">
-                                <span>Satisfacción Cliente</span>
-                                <i class="fa-solid fa-star kpi-icon text-warning"></i>
+                                <span>Órdenes Abiertas</span>
                             </div>
-                            <div class="kpi-value">4.8<span style="font-size:1rem; color:var(--text-muted)">/5</span></div>
-                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.2 pts</div>
+                            <div class="kpi-value" id="kpi-val-abiertas">14</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend text-muted"><span>En cola activa</span></div>
+                                <button class="kpi-info-btn" data-kpi-spec="ordenes_abiertas"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Servicios Cancelados</span>
-                                <i class="fa-solid fa-ban kpi-icon text-danger"></i>
+
+                        <!-- KPI 2: Tasa de cumplimiento SLA -->
+                        <div class="kpi-card" data-drill="sla-riesgo" title="Clic para filtrar órdenes en riesgo o vencidas de SLA">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-stopwatch kpi-icon text-success"></i>
                             </div>
-                            <div class="kpi-value">3</div>
-                            <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -2 vs mes ant.</div>
+                            <div class="kpi-header">
+                                <span>Tasa Cumplim. SLA</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-sla">92%</div>
+                            <div class="kpi-footer">
+                                <div class="sla-traffic-lights" id="kpi-sla-lights">
+                                    <span class="sla-dot sla-green" title="Cumplido (≥90%)"></span>
+                                    <span class="sla-dot sla-yellow" title="En riesgo (85%-89%)"></span>
+                                    <span class="sla-dot sla-red" title="Crítico (<85%)"></span>
+                                    <span class="text-success" id="kpi-sla-label">Óptimo</span>
+                                </div>
+                                <button class="kpi-info-btn" data-kpi-spec="cumplimiento_sla"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Tickets Reabiertos</span>
-                                <i class="fa-solid fa-rotate-left kpi-icon text-warning"></i>
+
+                        <!-- KPI 3: MTTR -->
+                        <div class="kpi-card" data-drill="finalizadas" title="Clic para ver órdenes finalizadas en la tabla">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-clock-rotate-left kpi-icon text-primary"></i>
                             </div>
-                            <div class="kpi-value">5%</div>
-                            <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +1% vs mes ant.</div>
+                            <div class="kpi-header">
+                                <span>MTTR (Tiempo Resolución)</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-mttr">2h 15m</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -10m vs mes ant.</div>
+                                <button class="kpi-info-btn" data-kpi-spec="mttr"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-header">
-                                <span>Eficiencia Operativa</span>
-                                <i class="fa-solid fa-bolt kpi-icon text-success"></i>
+
+                        <!-- KPI 4: Incidencias por tipo -->
+                        <div class="kpi-card" data-drill="incidencias" title="Clic para filtrar órdenes con incidencia">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-triangle-exclamation kpi-icon text-warning"></i>
                             </div>
-                            <div class="kpi-value">95%</div>
-                            <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +3% vs mes ant.</div>
+                            <div class="kpi-header">
+                                <span>Incidencias Registradas</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-incidencias">18%</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +5% vs mes ant.</div>
+                                <button class="kpi-info-btn" data-kpi-spec="incidencias_tipo"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
+                        </div>
+
+                        <!-- KPI 5: Carga de trabajo por técnico -->
+                        <div class="kpi-card" data-drill="todas" title="Clic para ver distribución completa en tabla">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-users-gear kpi-icon text-primary"></i>
+                            </div>
+                            <div class="kpi-header">
+                                <span>Carga por Técnico</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-carga">8.6 <span style="font-size:1rem; color:var(--text-muted)">ord/téc</span></div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend text-muted"><span>5 técnicos activos</span></div>
+                                <button class="kpi-info-btn" data-kpi-spec="carga_tecnico"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
+                        </div>
+
+                        <!-- KPI 6: Órdenes cerradas (productividad) -->
+                        <div class="kpi-card" data-drill="finalizadas" title="Clic para filtrar órdenes cerradas">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-circle-check kpi-icon text-success"></i>
+                            </div>
+                            <div class="kpi-header">
+                                <span>Órdenes Cerradas</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-cerradas">178</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> 91.6% cierre</div>
+                                <button class="kpi-info-btn" data-kpi-spec="ordenes_cerradas"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
+                        </div>
+
+                        <!-- KPI 7: Tiempo medio de respuesta a incidencias -->
+                        <div class="kpi-card" data-drill="incidencias" title="Clic para filtrar órdenes con incidencia">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-bolt kpi-icon text-warning"></i>
+                            </div>
+                            <div class="kpi-header">
+                                <span>Resp. a Incidencias</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-resp-inc">38 min</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend trend-success"><i class="fa-solid fa-arrow-down"></i> -6m vs mes ant.</div>
+                                <button class="kpi-info-btn" data-kpi-spec="tiempo_respuesta_inc"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
+                        </div>
+
+                        <!-- KPI 8: Tasa de retrabajo -->
+                        <div class="kpi-card" data-drill="retrabajo" title="Clic para filtrar tickets reabiertos">
+                            <div class="kpi-meta-row">
+                                <span class="badge-test-data">Datos de prueba</span>
+                                <i class="fa-solid fa-rotate-left kpi-icon text-danger"></i>
+                            </div>
+                            <div class="kpi-header">
+                                <span>Tasa de Retrabajo</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-val-retrabajo">5%</div>
+                            <div class="kpi-footer">
+                                <div class="kpi-trend trend-down"><i class="fa-solid fa-arrow-trend-up"></i> +1% vs mes ant.</div>
+                                <button class="kpi-info-btn" data-kpi-spec="tasa_retrabajo"><i class="fa-solid fa-circle-info"></i> Ficha</button>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- 4. LÍNEA DE TENDENCIA SEMANAL (Órdenes e Incidencias) -->
                     <div class="chart-card" style="margin-top: 1.5rem;">
-                        <div class="chart-title">Volumen de Solicitudes Mensual</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                            <div class="chart-title" style="margin-bottom:0;">Tendencia Semanal: Órdenes e Incidencias</div>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-hand-pointer"></i> Clic en una semana para filtrar</span>
+                        </div>
                         <div class="chart-container" style="height: 250px;">
                             <canvas id="lineChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Gráficas Añadidas Recientes -->
-                    <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
-                        <div class="chart-card">
-                            <div class="chart-title">Cumplimiento SLA por Región</div>
-                            <div class="chart-container"><canvas id="radarChart"></canvas></div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-title">Motivos de Cancelación</div>
-                            <div class="chart-container"><canvas id="horizontalBarChart"></canvas></div>
-                        </div>
-                    </div>
-
+                    <!-- 4. BARRAS APILADAS POR TÉCNICO + DONA DE TIPOS DE INCIDENCIA -->
                     <div class="charts-grid" style="margin-top: 1.5rem;">
                         <div class="chart-card">
-                            <div class="chart-title">Productividad por Técnico</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Carga de Trabajo por Técnico (Barras Apiladas)</div>
+                                <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-hand-pointer"></i> Clic en barra para filtrar técnico</span>
+                            </div>
                             <div class="chart-container"><canvas id="barChart"></canvas></div>
                         </div>
                         <div class="chart-card">
-                            <div class="chart-title">Incidencias Activas</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Incidencias por Tipo</div>
+                                <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-hand-pointer"></i> Clic para filtrar tipo</span>
+                            </div>
                             <div class="chart-container"><canvas id="donutChart"></canvas></div>
                         </div>
                     </div>
 
-                    <div class="table-card" style="margin-top: 1.5rem;">
-                        <div class="table-header-flex">
-                            <div class="chart-title" style="margin-bottom:0;">Operaciones en Tiempo Real</div>
-                            <div><input type="text" class="search-input" placeholder="Buscar ID o Cliente..."></div>
+                    <!-- 4. RADAR SLA POR REGIÓN + SEMÁFOROS SLA + MOTIVOS DE CANCELACIÓN -->
+                    <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
+                        <div class="chart-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Cumplimiento SLA por Región</div>
+                                <span class="badge-test-data">Datos de prueba</span>
+                            </div>
+                            <div class="chart-container" style="height:240px;"><canvas id="radarChart"></canvas></div>
+                            <div class="sla-legend">
+                                <span class="sla-legend-item"><span class="sla-dot sla-green"></span> Verde (≥90%): Centro 98%, Norte 95%, Este 92%</span>
+                                <span class="sla-legend-item"><span class="sla-dot sla-yellow"></span> Amarillo (86-89%): Sur 88%</span>
+                                <span class="sla-legend-item"><span class="sla-dot sla-red"></span> Rojo (≤85%): Oeste 85%</span>
+                            </div>
                         </div>
+                        <div class="chart-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Motivos de Cancelación</div>
+                                <span class="badge-test-data">Datos de prueba</span>
+                            </div>
+                            <div class="chart-container"><canvas id="horizontalBarChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- 4 & 5. TABLA DE DETALLE CON GRANULARIDAD DIARIA Y DRILL-DOWN -->
+                    <div class="table-card" id="daily-table-section" style="margin-top: 1.5rem;">
+                        <div class="table-header-flex" style="flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <div class="chart-title" style="margin-bottom:0.25rem;">Detalle de Operaciones (Granularidad Diaria)</div>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">Registros diarios del conjunto estático de octubre 2026</span>
+                            </div>
+                            <div style="display:flex; gap:0.75rem; align-items:center;">
+                                <input type="text" id="daily-search-input" class="search-input" placeholder="Buscar fecha, ID o Cliente...">
+                            </div>
+                        </div>
+
+                        <div id="active-filters-bar" class="active-filters-bar" style="display: none; margin-bottom: 1rem;">
+                            <div class="filter-chips" id="active-filter-chips"></div>
+                            <button id="btn-clear-table-filters" class="action-btn"><i class="fa-solid fa-xmark"></i> Quitar filtros</button>
+                        </div>
+
                         <table>
                             <thead>
                                 <tr>
+                                    <th>Fecha</th>
                                     <th>ID</th>
                                     <th>Cliente</th>
                                     <th>Técnico</th>
+                                    <th>Incidencia</th>
+                                    <th>Semáforo SLA</th>
                                     <th>Estado Actual</th>
-                                    <th>Última Act.</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr><td>#101</td><td>Corp. Alpha</td><td>J. Pérez</td><td><span class="badge badge-info">En Proceso</span></td><td>Hace 15 min</td><td><button class="action-btn">Detalle</button></td></tr>
-                                <tr><td>#102</td><td>Beta Networks</td><td>M. Gómez</td><td><span class="badge badge-danger">Detenida</span></td><td>Hace 45 min</td><td><button class="action-btn">Detalle</button></td></tr>
-                                <tr><td>#103</td><td>Gamma S.A.</td><td>L. Torres</td><td><span class="badge badge-warning">En Camino</span></td><td>Hace 5 min</td><td><button class="action-btn">Detalle</button></td></tr>
-                                <tr><td>#104</td><td>Omega Corp</td><td>A. Ruiz</td><td><span class="badge badge-success">Finalizada</span></td><td>Hace 2 horas</td><td><button class="action-btn">Detalle</button></td></tr>
+                            <tbody id="daily-table-body">
+                                <!-- Renderizado dinámico desde script.js -->
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <!-- VISTA 2: ÓRDENES DE TRABAJO -->
-                <div id="view-orders" class="view-section" style="display: none;">
-                    <div class="table-card">
-                        <div class="table-header-flex">
-                            <div class="chart-title" style="margin-bottom:0;">Todas las Órdenes</div>
+                    <!-- 8. TRAZABILIDAD: SECCIÓN FUENTE DE DATOS Y BOTÓN DICCIONARIO DE INDICADORES -->
+                    <div class="data-source-card" style="margin-top: 1.5rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                             <div>
-                                <button class="action-btn primary-btn" style="margin-right: 1rem;"><i class="fa-solid fa-plus"></i> Nueva Orden</button>
-                                <input type="text" class="search-input" placeholder="Buscar orden...">
+                                <div class="chart-title" style="margin-bottom:0.25rem;"><i class="fa-solid fa-database text-primary"></i> Fuente de Datos y Trazabilidad</div>
+                                <p style="font-size:0.82rem; color:var(--text-muted);">Metadatos del conjunto estático utilizado en este prototipo.</p>
+                            </div>
+                            <button id="btn-open-dictionary" class="action-btn primary-btn">
+                                <i class="fa-solid fa-book"></i> Ver diccionario de indicadores
+                            </button>
+                        </div>
+                        <div class="data-source-grid">
+                            <div class="data-source-item">
+                                <div class="data-source-label">Repositorio SQL de Origen</div>
+                                <div class="data-source-value">Esquema relacional <code>aranea_bi_db</code> (tablas <code>OrdenesTrabajo</code>, <code>BitacoraOrdenes</code>, <code>Clientes</code>, <code>Usuarios</code>).</div>
+                            </div>
+                            <div class="data-source-item">
+                                <div class="data-source-label">Fecha de Corte</div>
+                                <div class="data-source-value">31 de octubre de 2026 (Corte estático de 1 mes de operación / 4 semanas).</div>
+                            </div>
+                            <div class="data-source-item">
+                                <div class="data-source-label">Proceso ETL Ejecutado</div>
+                                <div class="data-source-value">Extracción estática de bitácora simulada → Transformación y cálculo de KPIs en cliente JS → Carga en memoria SPA.</div>
                             </div>
                         </div>
-                        <table>
+                    </div>
+                </div>
+
+                <!-- VISTA 2: ÓRDENES DE TRABAJO (Mantenida y etiquetada) -->
+                <div id="view-orders" class="view-section" style="display: none;">
+                    <div class="table-card">
+                        <div class="table-header-flex" style="flex-wrap: wrap; gap: 1rem;">
+                            <div style="display:flex; align-items:center; gap:0.75rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Todas las Órdenes</div>
+                                <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
+                            </div>
+                            <div>
+                                <button class="action-btn primary-btn" style="margin-right: 1rem;"><i class="fa-solid fa-plus"></i> Nueva Orden</button>
+                                <input type="text" id="orders-search-input" class="search-input" placeholder="Buscar orden...">
+                            </div>
+                        </div>
+                        <table id="orders-management-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -336,10 +522,14 @@
                     </div>
                 </div>
 
-                <!-- VISTA 3: TÉCNICOS -->
+                <!-- VISTA 3: TÉCNICOS (Mantenida y etiquetada con estado simulado) -->
                 <div id="view-technicians" class="view-section" style="display: none;">
+                    <div class="module-notice">
+                        <span><i class="fa-solid fa-location-crosshairs"></i> <strong>Nota de disponibilidad:</strong> Estado simulado, no GPS real.</span>
+                        <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
+                    </div>
                     <div class="kpi-grid">
-                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                        <div class="kpi-card" style="align-items: center; text-align: center; cursor: default;">
                             <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem;">JP</div>
                             <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">Juan Pérez</h3>
                             <span class="badge badge-info" style="margin-bottom: 1rem;">En Ruta</span>
@@ -347,7 +537,7 @@
                             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top:0.5rem;">Órdenes hoy: 4</p>
                             <button class="action-btn" style="margin-top: 1rem; width: 100%;">Asignar Orden</button>
                         </div>
-                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                        <div class="kpi-card" style="align-items: center; text-align: center; cursor: default;">
                             <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #6366f1, #3b82f6);">MG</div>
                             <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">María Gómez</h3>
                             <span class="badge badge-danger" style="margin-bottom: 1rem;">Detenida</span>
@@ -355,7 +545,7 @@
                             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top:0.5rem;">Órdenes hoy: 2</p>
                             <button class="action-btn" style="margin-top: 1rem; width: 100%;">Asignar Orden</button>
                         </div>
-                        <div class="kpi-card" style="align-items: center; text-align: center;">
+                        <div class="kpi-card" style="align-items: center; text-align: center; cursor: default;">
                             <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #f59e0b, #ef4444);">LT</div>
                             <h3 style="margin-bottom: 0.5rem; font-size:1.2rem;">Luis Torres</h3>
                             <span class="badge badge-success" style="margin-bottom: 1rem;">Disponible</span>
@@ -366,53 +556,110 @@
                     </div>
                 </div>
 
-                <!-- VISTA 4: REPORTES -->
+                <!-- VISTA 4: REPORTES (Mantenida y funcional en cliente) -->
                 <div id="view-reports" class="view-section" style="display: none;">
-                    <div class="kpi-card" style="max-width: 600px;">
-                        <div class="chart-title">Generador de Reportes</div>
-                        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Selecciona los parámetros para exportar un reporte detallado en Excel o PDF.</p>
+                    <div class="kpi-card" style="max-width: 650px; cursor: default;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <div class="chart-title" style="margin-bottom:0;">Generador de Reportes</div>
+                            <span class="badge-test-data"><i class="fa-solid fa-flask"></i> Datos de prueba</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Selecciona los parámetros para exportar un reporte detallado en Excel (CSV) o PDF.</p>
                         
-                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="flex: 1;">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 200px;">
                                 <label style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.85rem;">Rango de Fechas</label>
-                                <input type="date" class="search-input" style="width: 100%; margin-bottom: 0.5rem;">
-                                <input type="date" class="search-input" style="width: 100%;">
+                                <input type="date" id="report-date-start" value="2026-10-01" class="search-input" style="width: 100%; margin-bottom: 0.5rem;">
+                                <input type="date" id="report-date-end" value="2026-10-31" class="search-input" style="width: 100%;">
                             </div>
-                            <div style="flex: 1;">
+                            <div style="flex: 1; min-width: 200px;">
                                 <label style="display:block; margin-bottom:0.5rem; color:var(--text-muted); font-size:0.85rem;">Tipo de Reporte</label>
-                                <select class="filter-select" style="width: 100%;">
-                                    <option>Rendimiento por Técnico</option>
-                                    <option>Listado de Incidencias</option>
-                                    <option>Cumplimiento SLA</option>
+                                <select id="report-type" class="filter-select" style="width: 100%;">
+                                    <option value="rendimiento">Rendimiento por Técnico</option>
+                                    <option value="incidencias">Listado de Incidencias</option>
+                                    <option value="sla">Cumplimiento SLA</option>
                                 </select>
                             </div>
                         </div>
-                        <button class="action-btn primary-btn"><i class="fa-solid fa-download"></i> Descargar Excel</button>
-                        <button class="action-btn" style="margin-left: 0.5rem;"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <button id="btn-export-excel" class="action-btn primary-btn"><i class="fa-solid fa-download"></i> Descargar Excel</button>
+                            <button id="btn-export-pdf" class="action-btn"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- VISTA 5: CONFIGURACIÓN -->
+                <!-- VISTA 5: CONFIGURACIÓN (Etiquetada + Funciones Pendientes deshabilitadas) -->
                 <div id="view-settings" class="view-section" style="display: none;">
-                    <div class="kpi-card" style="max-width: 600px;">
-                        <div class="chart-title">Preferencias del Sistema</div>
-                        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Opciones globales de la plataforma Aranea Telecom.</p>
-                        <hr style="border-color: var(--border-color); margin-bottom: 1rem;">
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                            <span>Recibir notificaciones semanales (Gerencia)</span>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; align-items: start;">
+                        <!-- Preferencias existentes -->
+                        <div class="kpi-card" style="cursor: default;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Preferencias del Sistema</div>
+                                <span class="badge-not-connected"><i class="fa-solid fa-plug-circle-xmark"></i> Configuración no conectada a backend</span>
+                            </div>
+                            <p style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.88rem;">Opciones globales de la plataforma Aranea Telecom (solo persistencia visual en sesión).</p>
+                            <hr style="border-color: var(--border-color); margin-bottom: 0.5rem;">
+                            
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                <span>Recibir notificaciones semanales (Gerencia)</span>
+                                <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                <span>Alertas SMS automáticas para Técnicos</span>
+                                <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                <span>Requerir foto de evidencia al finalizar orden</span>
+                                <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                            </div>
+                            
+                            <button class="action-btn primary-btn" style="margin-top: 0.5rem; width: fit-content;">Guardar Cambios</button>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                            <span>Alertas SMS automáticas para Técnicos</span>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+
+                        <!-- 7. FUNCIONES PENDIENTES (Próximamente, deshabilitadas) -->
+                        <div class="kpi-card" style="cursor: default;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                <div class="chart-title" style="margin-bottom:0;">Funciones Pendientes</div>
+                                <span class="badge-pending">Roadmap Técnico</span>
+                            </div>
+                            <p style="color: var(--text-muted); margin-bottom: 0.75rem; font-size: 0.88rem;">Capacidades planificadas para la fase productiva del sistema.</p>
+                            <div class="pending-list">
+                                <div class="pending-item" aria-disabled="true">
+                                    <div class="pending-item-info">
+                                        <span class="pending-item-title"><i class="fa-solid fa-wifi"></i> Sincronización offline</span>
+                                        <span class="pending-item-desc">Almacenamiento local (IndexedDB / PWA) para zonas sin cobertura.</span>
+                                    </div>
+                                    <span class="badge-pending">Próximamente</span>
+                                </div>
+                                <div class="pending-item" aria-disabled="true">
+                                    <div class="pending-item-info">
+                                        <span class="pending-item-title"><i class="fa-solid fa-bell"></i> Alertas proactivas automáticas</span>
+                                        <span class="pending-item-desc">Notificaciones preventivas de vencimiento de SLA y citas.</span>
+                                    </div>
+                                    <span class="badge-pending">Próximamente</span>
+                                </div>
+                                <div class="pending-item" aria-disabled="true">
+                                    <div class="pending-item-info">
+                                        <span class="pending-item-title"><i class="fa-solid fa-server"></i> Integración API REST</span>
+                                        <span class="pending-item-desc">Conexión bidireccional con servidor Node.js/Python y MySQL.</span>
+                                    </div>
+                                    <span class="badge-pending">Próximamente</span>
+                                </div>
+                                <div class="pending-item" aria-disabled="true">
+                                    <div class="pending-item-info">
+                                        <span class="pending-item-title"><i class="fa-solid fa-location-dot"></i> Telemetría GPS</span>
+                                        <span class="pending-item-desc">Rastreo geográfico en tiempo real de cuadrillas en ruta.</span>
+                                    </div>
+                                    <span class="badge-pending">Próximamente</span>
+                                </div>
+                                <div class="pending-item" aria-disabled="true">
+                                    <div class="pending-item-info">
+                                        <span class="pending-item-title"><i class="fa-solid fa-boxes-stacked"></i> Integración con inventario</span>
+                                        <span class="pending-item-desc">Control de stock de fibra, conectores y material en almacén.</span>
+                                    </div>
+                                    <span class="badge-pending">Próximamente</span>
+                                </div>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                            <span>Requerir foto de evidencia al finalizar orden</span>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
-                        </div>
-                        
-                        <button class="action-btn primary-btn" style="margin-top: 1rem;">Guardar Cambios</button>
                     </div>
                 </div>
 
